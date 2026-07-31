@@ -4,5 +4,5 @@ despite that, he's insanely cracked in coding and elevators (also will shred you
 
 check out his socials and please show some love!
 
-youtube: https://www.youtube.com/@elevatorzboy`  
+youtube: https://www.youtube.com/@elevatorzboy  
 instagram: https://www.instagram.com/elevatorzboy20/
