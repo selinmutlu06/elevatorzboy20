@@ -964,14 +964,53 @@
   let currentFloor = 1;
   let lastY = window.scrollY;
 
+  let audioCtx;
+  function pressSound() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime + 0.005;
+      // mechanical click: tiny high-passed noise burst
+      const buf = audioCtx.createBuffer(1, 220, audioCtx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buf;
+      const nf = audioCtx.createBiquadFilter();
+      nf.type = 'highpass';
+      nf.frequency.value = 2000;
+      const ng = audioCtx.createGain();
+      ng.gain.value = 0.3;
+      noise.connect(nf).connect(ng).connect(audioCtx.destination);
+      noise.start(t);
+      // piezo beep: sharp 2.1kHz square through a bandpass
+      const osc = audioCtx.createOscillator();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(2100, t);
+      const bp = audioCtx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = 2100;
+      bp.Q.value = 5;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.004);
+      g.gain.setValueAtTime(0.16, t + 0.055);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+      osc.connect(bp).connect(g).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.1);
+    } catch (e) {}
+  }
+
   const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules'};
   function rideTo(floor) {
     const id = floorTargets[floor];
     if (!id) return;
     document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
   }
-  arrowUp.addEventListener('click', () => rideTo(currentFloor + 1));
-  arrowDown.addEventListener('click', () => rideTo(currentFloor - 1));
+  arrowUp.addEventListener('click', () => { pressSound(); rideTo(currentFloor + 1); });
+  arrowDown.addEventListener('click', () => { pressSound(); rideTo(currentFloor - 1); });
+  navLinks.forEach(a => a.addEventListener('click', pressSound));
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
