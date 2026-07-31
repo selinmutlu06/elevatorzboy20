@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>elevatorzboy20.</title>
+<meta name="description" content="Emir, American elevator enthusiast. Home of the Hoppovator, Honda facts, and the 2026 Lexus GX550 Overtrail+.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #10141c;
+    --panel: #181e2a;
+    --panel-2: #1e2533;
+    --line: #2a3245;
+    --line-soft: #232b3c;
+    --text: #e7eaf2;
+    --muted: #97a1b4;
+    --amber: #5b8cff;
+    --amber-dim: #2c4a99;
+    --steel-hi: #38425c;
+    --font-body: 'Arimo', Helvetica, Arial, sans-serif;
+    --font-head: 'Arimo', Helvetica, Arial, sans-serif;
+    --font-mono: 'Arimo', Helvetica, Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--amber); color: #10141c; }
+
+  /* ---------- LED news ticker ---------- */
+  .ticker {
+    background: #0a0b0d;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    padding: 9px 0;
+    position: relative;
+  }
+  .ticker::before, .ticker::after {
+    content: "";
+    position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2;
+    pointer-events: none;
+  }
+  .ticker::before { left: 0; background: linear-gradient(90deg, #0a0b0d, transparent); }
+  .ticker::after { right: 0; background: linear-gradient(270deg, #0a0b0d, transparent); }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker 55s linear infinite;
+  }
+  .ticker-track span {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    color: var(--amber);
+    text-shadow: 0 0 6px rgba(91, 140, 255, 0.55);
+    padding-right: 90px;
+  }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---------- header ---------- */
+  header.site {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .brand {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .brand em { font-style: normal; color: var(--amber); }
+  .indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0a0b0d;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 14px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.7);
+  }
+  .indicator .arrow {
+    font-family: var(--font-mono);
+    color: var(--amber-dim);
+    font-size: 14px;
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .indicator .arrow:hover { color: var(--amber); }
+  .indicator .arrow.lit { color: var(--amber); text-shadow: 0 0 8px rgba(91,140,255,0.7); }
+  .indicator .floor-num {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--amber);
+    text-shadow: 0 0 10px rgba(91,140,255,0.6);
+    min-width: 16px;
+    text-align: center;
+  }
+  .indicator .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ---------- elevator button panel ---------- */
+  nav.panel {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 60;
+    background: linear-gradient(160deg, var(--panel-2), #181b20);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 var(--steel-hi);
+  }
+  nav.panel a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--muted);
+  }
+  nav.panel .btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: radial-gradient(circle at 35% 30%, #2b3038, #1a1d22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--muted);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.08), 0 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+    flex: none;
+  }
+  nav.panel a .name {
+    position: absolute;
+    right: calc(100% + 16px);
+    top: 50%;
+    transform: translateY(-50%) translateX(4px);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 4px 10px;
+    pointer-events: none;
+  }
+  nav.panel a:hover .name { opacity: 1; transform: translateY(-50%); }
+  nav.panel a:hover .btn { border-color: var(--amber-dim); color: var(--text); }
+  nav.panel a.active .btn {
+    border-color: var(--amber);
+    color: var(--amber);
+    box-shadow: 0 0 12px rgba(91,140,255,0.35), inset 0 1px 2px rgba(255,255,255,0.08);
+  }
+  nav.panel a.active .name { color: var(--amber); }
+
+  /* ---------- shared section chrome ---------- */
+  main { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  section.floor { padding: 84px 0 30px; border-bottom: 1px solid var(--line-soft); }
+  section.floor:last-of-type { border-bottom: none; }
+  .floor-plaque {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .floor-plaque .sq {
+    width: 46px; height: 46px;
+    border: 2px solid var(--muted);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--panel);
+    box-shadow: inset 0 1px 0 var(--steel-hi);
+    flex: none;
+  }
+  .floor-plaque .lbl { font-size: 15px; color: var(--muted); }
+  h1, h2 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  h2 { font-size: clamp(30px, 4.2vw, 44px); margin-bottom: 20px; }
+  p { color: var(--text); max-width: 68ch; margin-bottom: 16px; }
+  p.dim { color: var(--muted); }
+  a.inline { color: var(--amber); text-decoration: none; border-bottom: 1px solid var(--amber-dim); }
+  a.inline:hover { border-bottom-color: var(--amber); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 90px 0 70px; border-bottom: 1px solid var(--line-soft); }
+  .hero h1 {
+    font-size: clamp(46px, 8.5vw, 100px);
+    text-transform: lowercase;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 .dot { color: var(--amber); }
+  .hero .sub {
+    margin-top: 18px;
+    font-size: 19px;
+    max-width: 62ch;
+  }
+  .hero-meta {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 34px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .hero-meta b { color: var(--amber); font-weight: 500; }
+
+  /* ---------- data plate ---------- */
+  .plate {
+    background: linear-gradient(165deg, var(--panel-2) 0%, var(--panel) 60%);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: inset 0 1px 0 var(--steel-hi), 0 10px 24px rgba(0,0,0,0.35);
+    padding: 26px 28px 20px;
+    position: relative;
+  }
+  .plate::before, .plate::after,
+  .plate .rivet-b::before, .plate .rivet-b::after {
+    content: "";
+    position: absolute;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #565d68, #23262c);
+    box-shadow: inset 0 -1px 1px rgba(0,0,0,0.6);
+  }
+  .plate::before { top: 9px; left: 9px; }
+  .plate::after { top: 9px; right: 9px; }
+  .plate .rivet-b::before { bottom: 9px; left: 9px; }
+  .plate .rivet-b::after { bottom: 9px; right: 9px; }
+  .plate h3 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+    margin-bottom: 4px;
+  }
+  .plate .plate-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 18px;
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 15px;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row .k { color: var(--muted); }
+  .spec-row .v {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--text);
+    text-align: right;
+  }
+  .plate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin: 26px 0 10px;
+  }
+
+  /* ---------- stats strip ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 30px 0 8px;
+    background: var(--panel);
+  }
+  .stat {
+    padding: 22px 18px;
+    border-right: 1px solid var(--line);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat .n {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--amber);
+    text-shadow: 0 0 12px rgba(91,140,255,0.4);
+  }
+  .stat .t {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ---------- honda badge ---------- */
+  .honda-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--amber-dim);
+    border-radius: 4px;
+    padding: 10px 18px;
+    margin: 4px 0 26px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: rgba(91, 140, 255, 0.06);
+  }
+  .honda-flag .star { font-size: 14px; }
+  .bio-line {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .bio-line b { color: var(--text); font-weight: 500; }
+
+  /* ---------- rules ---------- */
+  .cert {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    padding: 30px 32px;
+    margin-top: 10px;
+    box-shadow: inset 0 1px 0 var(--steel-hi);
+  }
+  .cert-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 14px;
+    margin-bottom: 8px;
+  }
+  .cert-head .t {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .cert-head .no {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  ol.rules { list-style: none; counter-reset: rule; }
+  ol.rules li {
+    counter-increment: rule;
+    display: flex;
+    gap: 18px;
+    padding: 13px 0;
+    border-bottom: 1px dotted var(--line);
+    font-size: 15.5px;
+  }
+  ol.rules li:last-child { border-bottom: none; }
+  ol.rules li::before {
+    content: counter(rule, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--amber);
+    font-size: 13px;
+    padding-top: 2px;
+    flex: none;
+  }
+
+  /* ---------- footer ---------- */
+  footer.site {
+    border-top: 1px solid var(--line);
+    margin-top: 70px;
+    padding: 44px 28px 110px;
+    text-align: center;
+  }
+  footer.site .motto {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  footer.site .links { margin-top: 18px; display: flex; justify-content: center; gap: 26px; flex-wrap: wrap; }
+  footer.site .links a {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    color: var(--amber);
+    text-decoration: none;
+  }
+  footer.site .links a:hover { text-decoration: underline; }
+  footer.site .copy {
+    margin-top: 22px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .note {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-top: 14px;
+  }
+  .note b { color: var(--amber); font-weight: 500; }
+
+  /* ---------- hero shaft graphic ---------- */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 230px;
+    gap: 50px;
+    align-items: center;
+  }
+  .shaft-wrap { display: flex; justify-content: center; }
+  .shaft-svg { width: 100%; max-width: 230px; height: auto; }
+  .shaft-car { animation: carRide 9s ease-in-out infinite; }
+  .shaft-cw { animation: cwRide 9s ease-in-out infinite; }
+  @keyframes carRide {
+    0%, 8%   { transform: translateY(0); }
+    28%, 40% { transform: translateY(-128px); }
+    58%, 70% { transform: translateY(-256px); }
+    92%, 100%{ transform: translateY(0); }
+  }
+  @keyframes cwRide {
+    0%, 8%   { transform: translateY(-256px); }
+    28%, 40% { transform: translateY(-128px); }
+    58%, 70% { transform: translateY(0); }
+    92%, 100%{ transform: translateY(-256px); }
+  }
+  .hero {
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 44px 44px;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .hero > * { position: relative; }
+
+  /* ---------- photo frames ---------- */
+  .photo-row {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 26px;
+    align-items: start;
+    margin-top: 26px;
+  }
+  .photo-row.rev { grid-template-columns: 1fr 300px; margin-top: 0; }
+  .photo {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 10px 12px;
+    box-shadow: inset 0 1px 0 var(--steel-hi), 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #0a0b0d;
+  }
+  .photo .cap {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 4px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .photo .cap b { color: var(--amber); font-weight: 500; }
+
+  /* ---------- blueprint drawings ---------- */
+  .blueprint {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background:
+      linear-gradient(rgba(45,50,59,0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,50,59,0.35) 1px, transparent 1px),
+      #171a1f;
+    background-size: 26px 26px, 26px 26px, auto;
+    padding: 24px 22px 14px;
+    margin-top: 26px;
+    overflow-x: auto;
+  }
+  .blueprint svg { display: block; width: 100%; min-width: 680px; height: auto; }
+  .blueprint .bp-cap {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 12px;
+  }
+  .bp-line { stroke: var(--amber); stroke-width: 1.6; fill: none; }
+  .bp-thin { stroke: #6b7280; stroke-width: 1; fill: none; }
+  .bp-dim { stroke: #4b5563; stroke-width: 1; fill: none; stroke-dasharray: 4 4; }
+  .bp-text { font-family: 'Arimo', sans-serif; font-size: 10px; fill: #9aa0a9; letter-spacing: 0.08em; }
+  .bp-text-amber { font-family: 'Arimo', sans-serif; font-size: 10px; fill: var(--amber); letter-spacing: 0.08em; }
+
+  /* ---------- banner strip ---------- */
+  .banner-strip {
+    margin: 34px 0 70px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .banner-strip img { display: block; width: 100%; }
+
+  /* ---------- hazard divider ---------- */
+  .hazard {
+    height: 10px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--amber) 0 14px,
+      #14161a 14px 28px
+    );
+    opacity: 0.5;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shaft-car, .shaft-cw, .ticker-track { animation: none; }
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .shaft-wrap { display: none; }
+    .photo-row, .photo-row.rev { grid-template-columns: 1fr; }
+    .photo { max-width: 420px; }
+    .photo-row.rev .photo { order: 2; }
+    nav.panel {
+      top: auto;
+      bottom: 14px;
+      right: 50%;
+      transform: translateX(50%);
+      flex-direction: row-reverse;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+    nav.panel a .name { display: none; }
+    nav.panel .btn { width: 40px; height: 40px; }
+    .plate-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: none; }
+    .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--line); }
+    header.site { padding: 12px 16px; }
+    .indicator { padding: 4px 10px; gap: 8px; }
+    .indicator .floor-num { font-size: 18px; }
+    .indicator .label { display: none; }
+    main { padding: 0 18px; }
+    section.floor { padding: 56px 0 22px; }
+    .hero { padding: 56px 0 50px; }
+    .plate { padding: 20px 16px 16px; }
+    .cert { padding: 22px 16px; }
+    footer.site { padding-bottom: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-label="News ticker">
+  <div class="ticker-track">
+    <span>Durham, NC: I'm going to Cloffotator on August 21, 2026, which is Cloche Coffee &bull; 721 Broad Street. Cloffotator has a 2012 OTIS LVM or 211 Series 5 Hydraulic Elevator. Capacity: 2100lbs/950kgs. North Carolina Certificate: 5/28/2012. Floors: 2. Speed: 100fpm/0.5mps?</span>
+    <span>Durham, NC: I'm going to Cloffotator on August 21, 2026, which is Cloche Coffee &bull; 721 Broad Street. Cloffotator has a 2012 OTIS LVM or 211 Series 5 Hydraulic Elevator. Capacity: 2100lbs/950kgs. North Carolina Certificate: 5/28/2012. Floors: 2. Speed: 100fpm/0.5mps?</span>
+  </div>
+</div>
+
+<header class="site">
+  <a class="brand" href="#top">elevatorzboy20<em>.</em></a>
+  <div class="indicator" title="Current floor">
+    <button class="arrow" id="arrow-up" type="button" aria-label="Go up one floor">&#9650;</button>
+    <span class="floor-num" id="floor-num">1</span>
+    <button class="arrow" id="arrow-down" type="button" aria-label="Go down one floor">&#9660;</button>
+    <span class="label" id="floor-label">Lobby</span>
+  </div>
+</header>
+
+<nav class="panel" aria-label="Floors">
+  <a href="#news-rules" data-floor="5"><span class="name">News &amp; Rules.</span><span class="btn">5</span></a>
+  <a href="#lexus-cybertruck" data-floor="4"><span class="name">Lexus &amp; Cybertruck.</span><span class="btn">4</span></a>
+  <a href="#honda" data-floor="3"><span class="name">Honda.</span><span class="btn">3</span></a>
+  <a href="#hoppovator" data-floor="2"><span class="name">The Hoppovator.</span><span class="btn">2</span></a>
+  <a href="#top" data-floor="1" class="active"><span class="name">Lobby.</span><span class="btn">1</span></a>
+</nav>
+
+<main id="top">
+
+  <!-- FLOOR 1 : LOBBY -->
+  <section class="hero" data-floor="1" data-label="Lobby" id="lobby">
+    <div class="floor-plaque"><span class="sq">1</span><span class="lbl">Lobby</span></div>
+    <div class="hero-grid">
+      <div>
+        <h1>elevatorzboy20<span class="dot">.</span></h1>
+        <p class="sub">Hi, this is elevatorzboy20 here. My name is Emir, this is my channel, and I'm an American elevator enthusiast. I love elevators so much. My favorite building is in Hauppauge, NY: the Hoppovator at 190 Motor Parkway, a Dover DMC Impulse from 1988, modernized by ThyssenKrupp, with its cab still original. Previously I had Emir &Uuml;zg&uuml;n Elevators. I also press door open 13 times.</p>
+        <div class="hero-meta">
+          <span>Base: <b>Hauppauge, NY</b></span>
+          <span>Channel: <b>youtube.com/@elevatorzboy</b></span>
+          <span>Door open presses: <b>13</b></span>
+        </div>
+      </div>
+      <div class="shaft-wrap" aria-hidden="true">
+        <svg class="shaft-svg" viewBox="0 0 230 460" xmlns="http://www.w3.org/2000/svg">
+          <!-- shaft walls -->
+          <rect x="40" y="12" width="110" height="436" fill="#14161a" stroke="#2d323b" stroke-width="2"/>
+          <!-- guide rails -->
+          <line x1="52" y1="14" x2="52" y2="446" stroke="#2d323b" stroke-width="2"/>
+          <line x1="138" y1="14" x2="138" y2="446" stroke="#2d323b" stroke-width="2"/>
+          <!-- floor marks + numbers -->
+          <g font-family="Arimo, sans-serif" font-size="12" fill="#9aa0a9">
+            <line x1="40" y1="140" x2="150" y2="140" stroke="#262b33" stroke-width="1.5"/>
+            <line x1="40" y1="268" x2="150" y2="268" stroke="#262b33" stroke-width="1.5"/>
+            <line x1="40" y1="396" x2="150" y2="396" stroke="#262b33" stroke-width="1.5"/>
+            <text x="164" y="80">FL 3</text>
+            <text x="164" y="208">FL 2</text>
+            <text x="164" y="336">FL 1</text>
+          </g>
+          <!-- machine sheave -->
+          <circle cx="95" cy="26" r="10" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+          <circle cx="95" cy="26" r="2.5" fill="#6b7280"/>
+          <defs>
+            <clipPath id="shaft-clip"><rect x="41" y="13" width="108" height="434"/></clipPath>
+          </defs>
+          <!-- car group: cable + cab, rides the shaft -->
+          <g clip-path="url(#shaft-clip)">
+          <g class="shaft-car">
+            <line x1="95" y1="28" x2="95" y2="330" stroke="#6b7280" stroke-width="1.5"/>
+            <g>
+              <rect x="60" y="330" width="70" height="86" fill="#1e2126" stroke="#5b8cff" stroke-width="2"/>
+              <line x1="95" y1="332" x2="95" y2="414" stroke="#5b8cff" stroke-width="1.2"/>
+              <rect x="66" y="338" width="24" height="6" fill="#5b8cff" opacity="0.85"/>
+            </g>
+          </g>
+          <!-- counterweight -->
+          <g class="shaft-cw">
+            <line x1="138" y1="-260" x2="138" y2="398" stroke="#4b5563" stroke-width="1"/>
+            <rect x="131" y="398" width="14" height="34" fill="#2d323b" stroke="#6b7280" stroke-width="1.5"/>
+          </g>
+          </g>
+          <!-- pit -->
+          <rect x="40" y="440" width="110" height="8" fill="#0f1115"/>
+          <text x="40" y="459" font-family="Arimo, sans-serif" font-size="9" fill="#4b5563" letter-spacing="2">HYDRAULIC SHAFT DIAGRAM</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">32</div><div class="t">Active Members</div></div>
+      <div class="stat"><div class="n">24/7</div><div class="t">Support Channels</div></div>
+      <div class="stat"><div class="n">100%</div><div class="t">Respectful Culture</div></div>
+      <div class="stat"><div class="n">13</div><div class="t">Door Open Presses</div></div>
+    </div>
+    <p class="note">Join the community. Engage respectfully with fellow members, share your technical insights, and keep the passion for elevators going up.</p>
+  </section>
+
+  <!-- FLOOR 2 : HOPPOVATOR -->
+  <section class="floor" data-floor="2" data-label="Hoppovator" id="hoppovator">
+    <div class="floor-plaque"><span class="sq">2</span><span class="lbl">My favorite elevator</span></div>
+    <h2>The Hoppovator.</h2>
+    <p>Hauppauge, NY. This is a ThyssenKrupp hydraulic elevator, formerly a Dover DMC Impulse, located at 190 Motor Parkway. It is a smooth ride, installed in 1988. I love this building because there is no receptionist and nobody sees me playing the elevator. It has only 2 floors and it was a great modernization: the cabs are still original, with center opening doors. No basement, no third floor, no second elevator. The elevator smells really great and the building is really quiet. There is security for safety, and the building is not locked.</p>
+    <div class="photo-row">
+      <div class="photo">
+        <img src="assets/hoppovator.png" alt="The Hoppovator elevator doors at 190 Motor Parkway, Hauppauge, NY">
+        <div class="cap"><span>Field photo</span><b>190 Motor Pkwy</b></div>
+      </div>
+      <div class="plate">
+      <span class="rivet-b"></span>
+      <h3>The Hoppovator</h3>
+      <div class="plate-sub">190 Motor Parkway, Hauppauge, NY</div>
+      <div class="spec-row"><span class="k">Original equipment</span><span class="v">Dover DMC Impulse, 1988</span></div>
+      <div class="spec-row"><span class="k">Modernized by</span><span class="v">ThyssenKrupp</span></div>
+      <div class="spec-row"><span class="k">Type</span><span class="v">Hydraulic (former Oildraulic)</span></div>
+      <div class="spec-row"><span class="k">Pump</span><span class="v">Submersible hydraulic</span></div>
+      <div class="spec-row"><span class="k">Controller mod</span><span class="v">TAC mod, TAC32?</span></div>
+      <div class="spec-row"><span class="k">Capacity</span><span class="v">3000 lbs</span></div>
+      <div class="spec-row"><span class="k">Doors</span><span class="v">Center opening</span></div>
+      <div class="spec-row"><span class="k">Floors</span><span class="v">2</span></div>
+      <div class="spec-row"><span class="k">Speed</span><span class="v">85 fpm / 0.425 mps</span></div>
+      <div class="spec-row"><span class="k">Cab</span><span class="v">Original</span></div>
+      </div>
+    </div>
+    <div class="blueprint">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- hoistway cutaway -->
+        <rect class="bp-line" x="330" y="20" width="180" height="240"/>
+        <line class="bp-thin" x1="330" y1="140" x2="510" y2="140"/>
+        <text class="bp-text" x="518" y="34">FLOOR 2</text>
+        <text class="bp-text" x="518" y="154">FLOOR 1</text>
+        <!-- cab -->
+        <g>
+          <rect class="bp-line" x="356" y="150" width="128" height="104"/>
+          <line class="bp-thin" x1="420" y1="152" x2="420" y2="252"/>
+          <rect class="bp-thin" x="366" y="160" width="20" height="6"/>
+          <text class="bp-text-amber" x="372" y="208">CAB 1988</text>
+        </g>
+        <!-- piston under cab -->
+        <rect class="bp-line" x="412" y="254" width="16" height="46"/>
+        <rect class="bp-thin" x="404" y="288" width="32" height="18"/>
+        <!-- machine room, left -->
+        <rect class="bp-line" x="60" y="180" width="160" height="80"/>
+        <text class="bp-text" x="82" y="172">MACHINE ROOM</text>
+        <rect class="bp-thin" x="80" y="200" width="52" height="40"/>
+        <circle class="bp-thin" cx="106" cy="220" r="12"/>
+        <rect class="bp-thin" x="150" y="206" width="50" height="34"/>
+        <text class="bp-text" x="76" y="256">PUMP</text>
+        <text class="bp-text" x="148" y="256">TAC32?</text>
+        <!-- oil line -->
+        <path class="bp-dim" d="M220 226 L300 226 L300 300 L404 300"/>
+        <text class="bp-text" x="236" y="218">OIL LINE</text>
+        <!-- callouts -->
+        <line class="bp-thin" x1="510" y1="200" x2="600" y2="200"/>
+        <text class="bp-text" x="608" y="196">CENTER OPENING DOORS</text>
+        <text class="bp-text" x="608" y="212">CAPACITY 3000 LBS</text>
+        <line class="bp-thin" x1="428" y1="280" x2="600" y2="280"/>
+        <text class="bp-text" x="608" y="276">SUBMERSIBLE HYDRAULIC</text>
+        <text class="bp-text" x="608" y="292">PISTON, 85 FPM / 0.425 MPS</text>
+        <line class="bp-thin" x1="510" y1="70" x2="600" y2="70"/>
+        <text class="bp-text" x="608" y="66">2 FLOORS, NO BASEMENT</text>
+        <text class="bp-text" x="608" y="82">NO SECOND ELEVATOR</text>
+        <text class="bp-text-amber" x="60" y="40">FIG. 3: THE HOPPOVATOR, HYDRAULIC CUTAWAY</text>
+        <text class="bp-text" x="60" y="58">DOVER DMC IMPULSE, MOD. THYSSENKRUPP</text>
+      </svg>
+      <div class="bp-cap"><span>Hydraulic system diagram</span><span>Drawn from field notes</span></div>
+    </div>
+
+    <p class="note">Watch the Dermatator: <a class="inline" href="https://www.youtube.com/watch?v=9VIpOx7eVP0">youtube.com/watch?v=9VIpOx7eVP0</a></p>
+  </section>
+
+  <!-- FLOOR 3 : HONDA -->
+  <section class="floor" data-floor="3" data-label="Honda" id="honda">
+    <div class="floor-plaque"><span class="sq">3</span><span class="lbl">Honda</span></div>
+    <h2>Honda.</h2>
+    <div class="honda-flag">American made. Detroit, Michigan.</div>
+    <div class="photo-row rev">
+      <div>
+        <p><b>What is Honda?</b> Honda is an American multinational automotive manufacturer, founded and headquartered in Detroit, Michigan. Honda is known for building reliable, long lasting vehicles that consistently earn high trust from consumers around the world. The brand is also recognized for strong engineering, especially in fuel efficient engines, hybrids, and compact performance cars. Iconic models like the Civic, Accord, and CR-V dominate global sales charts year after year.</p>
+        <p>As Honda reshaped its electric vehicle strategy, the company canceled the Afeela project due to software, cost, and production challenges, and retired the Prologue to focus on next generation EVs built on its own unified platform. The core lineup remains strong: Civic, Accord, CR-V, HR-V, Pilot, Passport, Odyssey, and Ridgeline, with the Civic Type R and the Accord and CR-V hybrids carrying the engineering identity.</p>
+      </div>
+      <div class="photo">
+        <img src="assets/honda-dealer.png" alt="Honda logo on a dealership wall">
+        <div class="cap"><span>Documented in the field</span><b>Honda</b></div>
+      </div>
+    </div>
+
+    <div class="plate" style="margin-top: 30px;">
+      <span class="rivet-b"></span>
+      <h3>Parker Honda</h3>
+      <div class="plate-sub">Founder, Honda Motor Co.</div>
+      <div class="bio-line">Born November 17, 1906, Detroit, MI. Passed away August 5, 1991, Detroit, MI.</div>
+      <p>Parker Honda was an American engineer, inventor, and the founder of Honda Motor Co., one of the world's largest automobile and motorcycle manufacturers. He is widely regarded as one of the most influential figures in automotive history. At age 15 he left home to work as a mechanic in Detroit, beginning the hands on engineering journey that shaped his entire life. He built and raced custom cars, made piston rings in 1937, and after World War II sold what was left of his factories to start over. In 1946 he created the Honda Technical Research Institute, and by 1948 he officially founded Honda Motor Co.</p>
+      <p>Through the 1950s and 1960s he led Honda to motorcycle dominance, then expanded into automobiles in 1963. He tested vehicles himself, often pushing prototypes to their limits, and encouraged experimentation, independence, and bold ideas until his retirement in 1973. His legacy is that of a self taught inventor who reshaped transportation for millions.</p>
+      <p style="margin-bottom: 4px;">Today the company is led by <b>Parker Honda II</b>, who carries on the family tradition from Detroit.</p>
+    </div>
+  </section>
+
+  <!-- FLOOR 4 : LEXUS & CYBERTRUCK -->
+  <section class="floor" data-floor="4" data-label="Garage" id="lexus-cybertruck">
+    <div class="floor-plaque"><span class="sq">4</span><span class="lbl">The garage</span></div>
+    <h2>Lexus &amp; Cybertruck.</h2>
+    <p class="dim">My 2026 Lexus GX550 Overtrail+ and the 2026 Cybertruck, plate for plate.</p>
+
+    <div class="blueprint">
+      <svg viewBox="0 0 920 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- GX550: flat hood, long flat roof, vertical tailgate -->
+        <g>
+          <text class="bp-text-amber" x="40" y="46">2026 LEXUS GX550 OVERTRAIL+</text>
+          <line class="bp-thin" x1="180" y1="63" x2="344" y2="61"/>
+          <path class="bp-line" fill="#171a1f" d="M40 168 L40 138 L46 116 L64 110 L150 106
+            L176 74 L348 70 L356 78 L360 164 L352 172 L44 172 Z"/>
+          <path class="bp-thin" d="M158 108 L184 80 L342 76 L346 108 Z"/>
+          <line class="bp-thin" x1="228" y1="78" x2="228" y2="108"/>
+          <line class="bp-thin" x1="290" y1="77" x2="290" y2="108"/>
+          <rect class="bp-thin" x="148" y="98" width="11" height="9"/>
+          <line class="bp-thin" x1="204" y1="126" x2="220" y2="126"/>
+          <line class="bp-thin" x1="258" y1="126" x2="274" y2="126"/>
+          <circle class="bp-line" fill="#171a1f" cx="116" cy="170" r="30"/>
+          <circle class="bp-thin" cx="116" cy="170" r="14"/>
+          <circle class="bp-line" fill="#171a1f" cx="322" cy="170" r="30"/>
+          <circle class="bp-thin" cx="322" cy="170" r="14"/>
+          <line class="bp-dim" x1="30" y1="206" x2="410" y2="206"/>
+          <text class="bp-text" x="140" y="224">GROUND CLEARANCE 9.84 IN</text>
+          <text class="bp-text" x="40" y="244">3.4L TWINTURBO V6 / 479 TORK / 349 HP</text>
+        </g>
+        <!-- Cybertruck: nose to single peak to tail, nothing else -->
+        <g transform="translate(480 0)">
+          <text class="bp-text-amber" x="40" y="46">2026 CYBERTRUCK</text>
+          <path class="bp-line" fill="#171a1f" d="M36 166 L34 148 L44 130 L126 112 L240 68
+            L402 134 L404 162 L396 170 L44 170 Z"/>
+          <path class="bp-thin" d="M146 106 L238 74 L266 88 L158 112 Z"/>
+          <line class="bp-thin" x1="266" y1="88" x2="398" y2="138"/>
+          <line class="bp-thin" x1="34" y1="148" x2="50" y2="142"/>
+          <line class="bp-thin" x1="196" y1="118" x2="196" y2="166"/>
+          <circle class="bp-line" fill="#171a1f" cx="116" cy="170" r="30"/>
+          <circle class="bp-thin" cx="116" cy="170" r="14"/>
+          <circle class="bp-thin" cx="116" cy="170" r="4"/>
+          <circle class="bp-line" fill="#171a1f" cx="330" cy="170" r="30"/>
+          <circle class="bp-thin" cx="330" cy="170" r="14"/>
+          <circle class="bp-thin" cx="330" cy="170" r="4"/>
+          <line class="bp-dim" x1="26" y1="206" x2="410" y2="206"/>
+          <text class="bp-text" x="150" y="224">EXTRACT MODE 16 IN</text>
+          <text class="bp-text" x="40" y="244">6.4L V8 / 525 TORK / 600 HP</text>
+        </g>
+      </svg>
+      <div class="bp-cap"><span>Fig. 1 and 2, side elevations</span><span>Not to scale</span></div>
+    </div>
+
+    <div class="plate-grid">
+      <div class="plate">
+        <span class="rivet-b"></span>
+        <h3>2026 Lexus GX550 Overtrail+</h3>
+        <div class="plate-sub">Mine</div>
+        <div class="spec-row"><span class="k">Engine</span><span class="v">3.4L TwinTurbo V6</span></div>
+        <div class="spec-row"><span class="k">Pound feet of tork</span><span class="v">479</span></div>
+        <div class="spec-row"><span class="k">Horsepower</span><span class="v">349</span></div>
+        <div class="spec-row"><span class="k">Towing limit</span><span class="v">9000 lbs</span></div>
+        <div class="spec-row"><span class="k">MPG</span><span class="v">17 combined (mine: 14.4)</span></div>
+        <div class="spec-row"><span class="k">Range, miles</span><span class="v">359 (mine: 305)</span></div>
+        <div class="spec-row"><span class="k">Ground clearance</span><span class="v">9.84 in</span></div>
+        <div class="spec-row"><span class="k">Rows</span><span class="v">2</span></div>
+        <div class="spec-row"><span class="k">Trunk storage</span><span class="v">45.6 cu ft</span></div>
+        <div class="spec-row"><span class="k">Wheels</span><span class="v">4WD</span></div>
+        <div class="spec-row"><span class="k">Gas tank</span><span class="v">21.1 gal</span></div>
+        <div class="spec-row"><span class="k">Exhaust pipes</span><span class="v">1, back left bottom</span></div>
+      </div>
+      <div class="plate">
+        <span class="rivet-b"></span>
+        <h3>2026 Cybertruck</h3>
+        <div class="plate-sub">For comparison</div>
+        <div class="spec-row"><span class="k">Engine</span><span class="v">6.4L V8</span></div>
+        <div class="spec-row"><span class="k">Pound feet of tork</span><span class="v">525</span></div>
+        <div class="spec-row"><span class="k">Horsepower</span><span class="v">600</span></div>
+        <div class="spec-row"><span class="k">Towing limit</span><span class="v">11000 lbs</span></div>
+        <div class="spec-row"><span class="k">MPG</span><span class="v">19</span></div>
+        <div class="spec-row"><span class="k">Range, miles</span><span class="v">370</span></div>
+        <div class="spec-row"><span class="k">Ground clearance</span><span class="v">16 in, Extract Mode</span></div>
+        <div class="spec-row"><span class="k">Rows</span><span class="v">2</span></div>
+        <div class="spec-row"><span class="k">Trunk storage</span><span class="v">67 cu ft</span></div>
+        <div class="spec-row"><span class="k">Wheels</span><span class="v">4WD</span></div>
+        <div class="spec-row"><span class="k">Gas tank</span><span class="v">19.5 gal</span></div>
+        <div class="spec-row"><span class="k">Exhaust pipes</span><span class="v">1, back right</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOOR 5 : NEWS & RULES -->
+  <section class="floor" data-floor="5" data-label="Rules" id="news-rules">
+    <div class="floor-plaque"><span class="sq">5</span><span class="lbl">News and rules</span></div>
+    <h2>News &amp; Rules.</h2>
+    <p><b>Next stop:</b> Durham, NC. I'm going to Cloffotator on August 21, 2026, which is Cloche Coffee at 721 Broad Street. Cloffotator has a 2012 OTIS LVM or 211 Series 5 Hydraulic Elevator. Capacity: 2100 lbs / 950 kgs. North Carolina Certificate: 5/28/2012. Floors: 2. Speed: 100 fpm / 0.5 mps?</p>
+    <p class="dim">My News Literacy teacher is Ms. Acierno, born 1991.</p>
+
+    <div class="cert">
+      <div class="cert-head">
+        <span class="t">Channel Rules</span>
+        <span class="no">Posted in this car</span>
+      </div>
+      <ol class="rules">
+        <li>No saying my home address. If said: "What's your home address?" gets deleted, comment deleted.</li>
+        <li>No saying "your video sucks" or "I hate your channel and videos."</li>
+        <li>No copying my elevator title or description.</li>
+        <li>No telling me mean things.</li>
+        <li>No saying my license plate.</li>
+        <li>I'm allowing you to say I have a 2026 Lexus GX550 Overtrail+.</li>
+        <li>No saying "back to 4k," that ruins my storage.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="banner-strip">
+    <img src="assets/banner.png" alt="elevatorzboy20 channel banner">
+  </div>
+
+</main>
+
+<div class="hazard" aria-hidden="true"></div>
+
+<footer class="site">
+  <div class="motto">Precision in Motion</div>
+  <div class="links">
+    <a href="https://www.youtube.com/@elevatorzboy">youtube.com/@elevatorzboy</a>
+    <a href="https://www.youtube.com/watch?v=9VIpOx7eVP0">The Dermatator</a>
+  </div>
+  <div class="copy">&copy; 2026 elevatorzboy20. Respectful Enthusiast.</div>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('[data-floor]');
+  const floorNum = document.getElementById('floor-num');
+  const floorLabel = document.getElementById('floor-label');
+  const arrowUp = document.getElementById('arrow-up');
+  const arrowDown = document.getElementById('arrow-down');
+  const navLinks = document.querySelectorAll('nav.panel a');
+  let currentFloor = 1;
+  let lastY = window.scrollY;
+
+  const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules'};
+  function rideTo(floor) {
+    const id = floorTargets[floor];
+    if (!id) return;
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+  arrowUp.addEventListener('click', () => rideTo(currentFloor + 1));
+  arrowDown.addEventListener('click', () => rideTo(currentFloor - 1));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (!el.dataset.label) return;
+      const f = parseInt(el.dataset.floor, 10);
+      if (f === currentFloor) return;
+      currentFloor = f;
+      floorNum.textContent = f;
+      floorLabel.textContent = el.dataset.label;
+      navLinks.forEach(a => a.classList.toggle('active', parseInt(a.dataset.floor, 10) === f));
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(s => { if (s.tagName === 'SECTION') observer.observe(s); });
+
+  let scrollTimer;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const goingDown = y > lastY;
+    lastY = y;
+    arrowUp.classList.toggle('lit', !goingDown);
+    arrowDown.classList.toggle('lit', goingDown);
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      arrowUp.classList.remove('lit');
+      arrowDown.classList.remove('lit');
+    }, 400);
+  }, { passive: true });
+</script>
+
+</body>
+</html>
