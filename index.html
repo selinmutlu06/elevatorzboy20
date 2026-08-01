@@ -491,6 +491,7 @@
     background: linear-gradient(100deg, #262c3a 0%, #313a4d 45%, #1e2430 50%, #2b3345 100%);
     transition: transform 0.65s cubic-bezier(0.6, 0, 0.3, 1);
   }
+  .ride-doors.closed .door { transition-duration: 2.7s; }
   .ride-doors .door.left { left: 0; border-right: 1px solid #0a0b0d; transform: translateX(-101%); }
   .ride-doors .door.right { right: 0; border-left: 1px solid #0a0b0d; transform: translateX(101%); }
   .ride-doors.closed .door { transform: translateX(0); }
@@ -512,7 +513,7 @@
     transition: opacity 0.3s;
     z-index: 2;
   }
-  .ride-doors.closed .ride-indicator { opacity: 1; transition-delay: 0.4s; }
+  .ride-doors.closed .ride-indicator { opacity: 1; transition-delay: 2s; }
   .ride-indicator .r-arrow {
     font-size: 20px;
     color: #232b3c;
@@ -570,7 +571,7 @@
     pointer-events: none;
     z-index: 2;
   }
-  .ride-doors.closed .ride-doorbtns { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
+  .ride-doors.closed .ride-doorbtns { opacity: 1; pointer-events: auto; transition-delay: 2s; }
   .ride-doorbtns button {
     width: 46px; height: 46px;
     border-radius: 50%;
@@ -1227,7 +1228,8 @@
     try {
       const c = audioCtx; if (!c) return;
       const t = c.currentTime + 0.01;
-      const len = Math.floor(c.sampleRate * 0.7);
+      const dur = closing ? 2.7 : 0.7;
+      const len = Math.floor(c.sampleRate * dur);
       const buf = c.createBuffer(1, len, c.sampleRate);
       const d = buf.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
@@ -1236,16 +1238,16 @@
       const g = c.createGain();
       g.gain.setValueAtTime(0.0001, t);
       g.gain.exponentialRampToValueAtTime(0.09, t + 0.15);
-      g.gain.setValueAtTime(0.09, t + 0.5);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.68);
+      g.gain.setValueAtTime(0.09, t + dur - 0.2);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur - 0.02);
       src.connect(f).connect(g).connect(c.destination); src.start(t);
       if (closing) {
         const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = 85;
         const og = c.createGain();
-        og.gain.setValueAtTime(0.0001, t + 0.6);
-        og.gain.exponentialRampToValueAtTime(0.25, t + 0.63);
-        og.gain.exponentialRampToValueAtTime(0.0001, t + 0.75);
-        o.connect(og).connect(c.destination); o.start(t + 0.6); o.stop(t + 0.8);
+        og.gain.setValueAtTime(0.0001, t + dur - 0.1);
+        og.gain.exponentialRampToValueAtTime(0.25, t + dur - 0.07);
+        og.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.05);
+        o.connect(og).connect(c.destination); o.start(t + dur - 0.1); o.stop(t + dur + 0.1);
       }
     } catch (e) {}
   }
@@ -1300,7 +1302,7 @@
       if (!closed) {
         statusTimer2 = setTimeout(() => doorStatus.classList.remove('show'), 2200);
       }
-    }, 700);
+    }, closed ? 2750 : 700);
   }
 
   let lockTimer;
@@ -1313,7 +1315,7 @@
     if (closed) {
       lockTimer = setTimeout(() => {
         if (doorsClosed && !riding) document.documentElement.style.overflow = 'hidden';
-      }, 700);
+      }, 2750);
     } else {
       document.documentElement.style.overflow = '';
     }
@@ -1364,7 +1366,7 @@
           }, 450);
         }
       }, stepMs);
-    }, 800);
+    }, 2850);
   }
 
   arrowUp.addEventListener('click', () => { pressSound(); rideTo(currentFloor + 1); });
