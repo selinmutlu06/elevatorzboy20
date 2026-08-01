@@ -1296,7 +1296,7 @@
     doorStatus.classList.add('show');
     statusTimer1 = setTimeout(() => {
       if (doorsClosed !== closed) return;
-      doorStatus.textContent = closed ? 'The door is closed.' : 'The door is open.';
+      doorStatus.textContent = closed ? 'The doors are closed.' : 'The doors are open.';
       if (!closed) {
         statusTimer2 = setTimeout(() => doorStatus.classList.remove('show'), 2200);
       }
