@@ -462,6 +462,82 @@
   }
   .note b { color: var(--amber); font-weight: 500; }
 
+  /* ---------- ride doors overlay ---------- */
+  .ride-doors {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .ride-doors .door {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 50.5%;
+    background: linear-gradient(100deg, #262c3a 0%, #313a4d 45%, #1e2430 50%, #2b3345 100%);
+    transition: transform 0.65s cubic-bezier(0.6, 0, 0.3, 1);
+  }
+  .ride-doors .door.left { left: 0; border-right: 1px solid #0a0b0d; transform: translateX(-101%); }
+  .ride-doors .door.right { right: 0; border-left: 1px solid #0a0b0d; transform: translateX(101%); }
+  .ride-doors.closed .door { transform: translateX(0); }
+  .ride-indicator {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: #0a0b0d;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 34px;
+    box-shadow: inset 0 3px 14px rgba(0,0,0,0.8), 0 12px 40px rgba(0,0,0,0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
+  .ride-doors.closed .ride-indicator { opacity: 1; transition-delay: 0.4s; }
+  .ride-indicator .r-arrow {
+    font-size: 20px;
+    color: #232b3c;
+    line-height: 1;
+  }
+  .ride-indicator .r-arrow.lit {
+    color: var(--amber);
+    text-shadow: 0 0 14px rgba(91,140,255,0.8);
+    animation: ridePulse 0.9s ease-in-out infinite;
+  }
+  @keyframes ridePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+  .ride-indicator .r-num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1.1;
+    color: var(--amber);
+    text-shadow: 0 0 22px rgba(91,140,255,0.7);
+    min-width: 46px;
+    text-align: center;
+  }
+
+  .door-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding-top: 12px;
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .door-row .btn {
+    cursor: pointer;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+
   /* ---------- hero shaft graphic ---------- */
   .hero-grid {
     display: grid;
@@ -611,6 +687,7 @@
     }
     nav.panel a .name { display: none; }
     nav.panel .btn { width: 40px; height: 40px; }
+    .door-row { order: -1; border-top: none; border-left: 1px solid var(--line); padding: 0 0 0 12px; margin: 0 0 0 2px; }
     .plate-grid { grid-template-columns: 1fr; }
     .stats { grid-template-columns: repeat(2, 1fr); }
     .stat:nth-child(2) { border-right: none; }
@@ -629,6 +706,16 @@
 </style>
 </head>
 <body>
+
+<div class="ride-doors" id="ride-doors" aria-hidden="true">
+  <div class="door left"></div>
+  <div class="door right"></div>
+  <div class="ride-indicator">
+    <span class="r-arrow" id="ride-arrow-up">&#9650;</span>
+    <span class="r-num" id="ride-num">1</span>
+    <span class="r-arrow" id="ride-arrow-down">&#9660;</span>
+  </div>
+</div>
 
 <div class="ticker" aria-label="News ticker">
   <div class="ticker-track">
@@ -653,6 +740,10 @@
   <a href="#honda" data-floor="3"><span class="name">Honda.</span><span class="btn">3</span></a>
   <a href="#hoppovator" data-floor="2"><span class="name">The Hoppovator.</span><span class="btn">2</span></a>
   <a href="#top" data-floor="1" class="active"><span class="name">Lobby.</span><span class="btn">1</span></a>
+  <div class="door-row">
+    <button class="btn" id="door-open" type="button" aria-label="Open doors">&#9668;&#9658;</button>
+    <button class="btn" id="door-close" type="button" aria-label="Close doors">&#9658;&#9668;</button>
+  </div>
 </nav>
 
 <main id="top">
@@ -1001,20 +1092,159 @@
       osc.stop(t + 0.1);
     } catch (e) {}
   }
+  function dingSound() {
+    try {
+      const c = audioCtx; if (!c) return;
+      const t = c.currentTime + 0.01;
+      [[1320, 0.5, 0.2], [2640, 0.3, 0.07]].forEach(([f, dur, vol]) => {
+        const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+        const g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(vol, t + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+      });
+    } catch (e) {}
+  }
+  function doorSound(closing) {
+    try {
+      const c = audioCtx; if (!c) return;
+      const t = c.currentTime + 0.01;
+      const len = Math.floor(c.sampleRate * 0.7);
+      const buf = c.createBuffer(1, len, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(); src.buffer = buf;
+      const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 380; f.Q.value = 0.8;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.09, t + 0.15);
+      g.gain.setValueAtTime(0.09, t + 0.5);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.68);
+      src.connect(f).connect(g).connect(c.destination); src.start(t);
+      if (closing) {
+        const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = 85;
+        const og = c.createGain();
+        og.gain.setValueAtTime(0.0001, t + 0.6);
+        og.gain.exponentialRampToValueAtTime(0.25, t + 0.63);
+        og.gain.exponentialRampToValueAtTime(0.0001, t + 0.75);
+        o.connect(og).connect(c.destination); o.start(t + 0.6); o.stop(t + 0.8);
+      }
+    } catch (e) {}
+  }
+  function humSound(up, dur) {
+    try {
+      const c = audioCtx; if (!c) return;
+      const t = c.currentTime + 0.01;
+      const o = c.createOscillator(); o.type = 'triangle';
+      o.frequency.setValueAtTime(up ? 80 : 115, t);
+      o.frequency.linearRampToValueAtTime(up ? 115 : 80, t + dur);
+      const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 260;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.14, t + 0.2);
+      g.gain.setValueAtTime(0.14, t + dur - 0.25);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(f).connect(g).connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  function tickSound() {
+    try {
+      const c = audioCtx; if (!c) return;
+      const t = c.currentTime + 0.005;
+      const o = c.createOscillator(); o.type = 'square'; o.frequency.value = 1500;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.05, t + 0.003);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+      o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.05);
+    } catch (e) {}
+  }
 
   const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules'};
+  const rideDoors = document.getElementById('ride-doors');
+  const rideNum = document.getElementById('ride-num');
+  const rideArrowUp = document.getElementById('ride-arrow-up');
+  const rideArrowDown = document.getElementById('ride-arrow-down');
+  let riding = false;
+  let doorsClosed = false;
+  let autoOpenTimer;
+
+  function setDoors(closed) {
+    doorsClosed = closed;
+    rideDoors.classList.toggle('closed', closed);
+    doorSound(closed);
+  }
+
   function rideTo(floor) {
     const id = floorTargets[floor];
-    if (!id) return;
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    if (!id || riding) return;
+    if (floor === currentFloor) return;
+    clearTimeout(autoOpenTimer);
+    riding = true;
+    const from = currentFloor;
+    const up = floor > from;
+    const steps = Math.abs(floor - from);
+    rideNum.textContent = from;
+    rideArrowUp.classList.toggle('lit', up);
+    rideArrowDown.classList.toggle('lit', !up);
+    setDoors(true);
+
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      const top = el.getBoundingClientRect().top + window.scrollY - 62;
+      window.scrollTo({ top: top, behavior: 'instant' });
+      const stepMs = 1333;
+      humSound(up, (steps * stepMs + 500) / 1000);
+      let f = from;
+      const timer = setInterval(() => {
+        f += up ? 1 : -1;
+        rideNum.textContent = f;
+        floorNum.textContent = f;
+        tickSound();
+        if (f === floor) {
+          clearInterval(timer);
+          setTimeout(() => {
+            dingSound();
+            currentFloor = floor;
+            floorLabel.textContent = document.getElementById(id).dataset.label;
+            navLinks.forEach(a => a.classList.toggle('active', parseInt(a.dataset.floor, 10) === floor));
+            rideArrowUp.classList.remove('lit');
+            rideArrowDown.classList.remove('lit');
+            setDoors(false);
+            setTimeout(() => { riding = false; }, 700);
+          }, 450);
+        }
+      }, stepMs);
+    }, 800);
   }
+
   arrowUp.addEventListener('click', () => { pressSound(); rideTo(currentFloor + 1); });
   arrowDown.addEventListener('click', () => { pressSound(); rideTo(currentFloor - 1); });
-  navLinks.forEach(a => a.addEventListener('click', pressSound));
+  navLinks.forEach(a => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    pressSound();
+    rideTo(parseInt(a.dataset.floor, 10));
+  }));
+
+  document.getElementById('door-open').addEventListener('click', () => {
+    pressSound();
+    if (riding || !doorsClosed) return;
+    clearTimeout(autoOpenTimer);
+    setDoors(false);
+  });
+  document.getElementById('door-close').addEventListener('click', () => {
+    pressSound();
+    if (riding || doorsClosed) return;
+    rideNum.textContent = currentFloor;
+    setDoors(true);
+    clearTimeout(autoOpenTimer);
+    autoOpenTimer = setTimeout(() => { if (!riding && doorsClosed) setDoors(false); }, 5000);
+  });
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+      if (riding || !entry.isIntersecting) return;
       const el = entry.target;
       if (!el.dataset.label) return;
       const f = parseInt(el.dataset.floor, 10);
