@@ -524,6 +524,33 @@
     text-align: center;
   }
 
+  .ride-doorbtns {
+    position: absolute;
+    top: 56%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .ride-doors.closed .ride-doorbtns { opacity: 1; pointer-events: auto; transition-delay: 0.4s; }
+  .ride-doorbtns button {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: radial-gradient(circle at 35% 30%, #2b3038, #1a1d22);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.6);
+  }
+  .ride-doorbtns button:hover { border-color: var(--amber-dim); color: var(--text); }
+  .ride-doorbtns button:active { border-color: var(--amber); color: var(--amber); }
+
   .door-row {
     display: flex;
     gap: 10px;
@@ -715,6 +742,10 @@
     <span class="r-arrow" id="ride-arrow-up">&#9650;</span>
     <span class="r-num" id="ride-num">1</span>
     <span class="r-arrow" id="ride-arrow-down">&#9660;</span>
+  </div>
+  <div class="ride-doorbtns">
+    <button id="ride-door-open" type="button" aria-label="Open doors">&#9668;&#9658;</button>
+    <button id="ride-door-close" type="button" aria-label="Close doors">&#9658;&#9668;</button>
   </div>
 </div>
 
@@ -1277,6 +1308,15 @@
     rideTo(parseInt(a.dataset.floor, 10));
   }));
 
+  document.getElementById('ride-door-open').addEventListener('click', () => {
+    pressSound();
+    if (riding || !doorsClosed) return;
+    clearTimeout(autoOpenTimer);
+    setDoors(false);
+  });
+  document.getElementById('ride-door-close').addEventListener('click', () => {
+    pressSound();
+  });
   document.getElementById('door-open').addEventListener('click', () => {
     pressSound();
     if (riding || !doorsClosed) return;
