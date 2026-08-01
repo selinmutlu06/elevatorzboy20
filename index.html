@@ -686,7 +686,8 @@
       border-radius: 999px;
     }
     nav.panel a .name { display: none; }
-    nav.panel .btn { width: 40px; height: 40px; }
+    nav.panel .btn { width: 33px; height: 33px; font-size: 12px; }
+    nav.panel { flex-wrap: wrap; justify-content: center; max-width: 94vw; gap: 8px; }
     .door-row { order: -1; border-top: none; border-left: 1px solid var(--line); padding: 0 0 0 12px; margin: 0 0 0 2px; }
     .plate-grid { grid-template-columns: 1fr; }
     .stats { grid-template-columns: repeat(2, 1fr); }
@@ -735,6 +736,9 @@
 </header>
 
 <nav class="panel" aria-label="Floors">
+  <a href="#suggestions" data-floor="8"><span class="name">Suggestions?</span><span class="btn">8</span></a>
+  <a href="#next-stops" data-floor="7"><span class="name">Next Stops.</span><span class="btn">7</span></a>
+  <a href="#recent-elevator" data-floor="6"><span class="name">Recent Elevator.</span><span class="btn">6</span></a>
   <a href="#news-rules" data-floor="5"><span class="name">News &amp; Rules.</span><span class="btn">5</span></a>
   <a href="#lexus-cybertruck" data-floor="4"><span class="name">Lexus &amp; Cybertruck.</span><span class="btn">4</span></a>
   <a href="#honda" data-floor="3"><span class="name">Honda.</span><span class="btn">3</span></a>
@@ -1008,7 +1012,6 @@
   <section class="floor" data-floor="5" data-label="Rules" id="news-rules">
     <div class="floor-plaque"><span class="sq">5</span><span class="lbl">News and rules</span></div>
     <h2>News &amp; Rules.</h2>
-    <p><b>Next stop:</b> Durham, NC. I'm going to Cloffotator on August 21, 2026, which is Cloche Coffee at 721 Broad Street. Cloffotator has a 2012 OTIS LVM or 211 Series 5 Hydraulic Elevator. Capacity: 2100 lbs / 950 kgs. North Carolina Certificate: 5/28/2012. Floors: 2. Speed: 100 fpm / 0.5 mps?</p>
     <p class="dim">My News Literacy teacher is Ms. Acierno, born 1991.</p>
 
     <div class="cert">
@@ -1026,6 +1029,52 @@
         <li>No saying "back to 4k," that ruins my storage.</li>
       </ol>
     </div>
+  </section>
+
+  <!-- FLOOR 6 : MOST RECENT ELEVATOR -->
+  <section class="floor" data-floor="6" data-label="Recent" id="recent-elevator">
+    <div class="floor-plaque"><span class="sq">6</span><span class="lbl">Most recent elevator</span></div>
+    <h2>Most Recent Elevator.</h2>
+    <p><b>Holtsville, NY.</b> Nice. Dover DMC Impulse Oildraulic/Hydraulic Elevators at the Holiday Inn Arpt by IHG.</p>
+    <p class="dim">Recorded 7/19/2026, 11:28am EST.</p>
+    <p>This is the nicest elevator I've ever seen. My aunt went to this hotel and it has the 1989 Dover DMC Impulse Oildraulic/Hydraulic elevators. It has a receptionist for the hotel check-in and they didn't send me about me in the elevators. This hotel has three floors and it is on exit 63 of Long Island Expressway. It smells so beautiful and nobody posted my first ever hotel on Long Island. It drives in 8.3 miles to the airport and it only takes 15 minutes to drive.</p>
+    <div class="plate" style="margin-top: 26px; max-width: 560px;">
+      <span class="rivet-b"></span>
+      <h3>Holiday Inn Arpt by IHG</h3>
+      <div class="plate-sub">Holtsville, NY</div>
+      <div class="spec-row"><span class="k">Equipment</span><span class="v">Dover DMC Impulse, 1989</span></div>
+      <div class="spec-row"><span class="k">Type</span><span class="v">Oildraulic / Hydraulic</span></div>
+      <div class="spec-row"><span class="k">Capacity</span><span class="v">3500 lbs / 1600 kg</span></div>
+      <div class="spec-row"><span class="k">Doors</span><span class="v">Center opening</span></div>
+      <div class="spec-row"><span class="k">Floors</span><span class="v">3</span></div>
+      <div class="spec-row"><span class="k">Front desk</span><span class="v">Receptionist, check-in</span></div>
+      <div class="spec-row"><span class="k">Highway</span><span class="v">Exit 63, Long Island Expressway</span></div>
+      <div class="spec-row"><span class="k">To the airport</span><span class="v">8.3 miles, 15 minutes</span></div>
+      <div class="spec-row"><span class="k">Verdict</span><span class="v">Nicest elevator I've ever seen</span></div>
+    </div>
+  </section>
+
+  <!-- FLOOR 7 : NEXT STOPS -->
+  <section class="floor" data-floor="7" data-label="Next stops" id="next-stops">
+    <div class="floor-plaque"><span class="sq">7</span><span class="lbl">Next stops</span></div>
+    <h2>Next Stops.</h2>
+    <div class="cert">
+      <div class="cert-head">
+        <span class="t">Itinerary</span>
+        <span class="no">Subject to change</span>
+      </div>
+      <ol class="rules">
+        <li>McLean, Virginia. I am going to Virginia on Monday, August 3, and coming back on Wednesday morning for my sister's technology event. I have another channel called handdryerzboy20. It has only theCoderSchool, so I will post more soon. Stay tuned!</li>
+        <li>Durham, NC. I'm going to Cloffotator on August 21, 2026, which is Cloche Coffee at 721 Broad Street. Cloffotator has a 2012 OTIS LVM or 211 Series 5 Hydraulic Elevator. Capacity: 2100 lbs / 950 kgs. North Carolina Certificate: 5/28/2012. Floors: 2. Speed: 100 fpm / 0.5 mps?</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FLOOR 8 : SUGGESTIONS -->
+  <section class="floor" data-floor="8" data-label="Suggestions" id="suggestions">
+    <div class="floor-plaque"><span class="sq">8</span><span class="lbl">Suggestions</span></div>
+    <h2>Suggestions?</h2>
+    <p>Got an elevator I should ride next, or an idea for this site? Leave a comment on my channel: <a class="inline" href="https://www.youtube.com/@elevatorzboy">youtube.com/@elevatorzboy</a>. The rules on floor 5 apply.</p>
   </section>
 
   <div class="banner-strip">
@@ -1161,7 +1210,7 @@
     } catch (e) {}
   }
 
-  const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules'};
+  const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules', 6: 'recent-elevator', 7: 'next-stops', 8: 'suggestions'};
   const rideDoors = document.getElementById('ride-doors');
   const rideNum = document.getElementById('ride-num');
   const rideArrowUp = document.getElementById('ride-arrow-up');
