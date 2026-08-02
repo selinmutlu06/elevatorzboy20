@@ -628,16 +628,14 @@
   .shaft-car { animation: carRide 9s ease-in-out infinite; }
   .shaft-cw { animation: cwRide 9s ease-in-out infinite; }
   @keyframes carRide {
-    0%, 8%   { transform: translateY(0); }
-    28%, 40% { transform: translateY(-128px); }
-    58%, 70% { transform: translateY(-256px); }
-    92%, 100%{ transform: translateY(0); }
+    0%, 12%  { transform: translateY(0); }
+    38%, 62% { transform: translateY(-196px); }
+    88%, 100%{ transform: translateY(0); }
   }
   @keyframes cwRide {
-    0%, 8%   { transform: translateY(-256px); }
-    28%, 40% { transform: translateY(-128px); }
-    58%, 70% { transform: translateY(0); }
-    92%, 100%{ transform: translateY(-256px); }
+    0%, 12%  { transform: translateY(-196px); }
+    38%, 62% { transform: translateY(0); }
+    88%, 100%{ transform: translateY(-196px); }
   }
   .hero {
     position: relative;
@@ -863,12 +861,9 @@
           <line x1="138" y1="14" x2="138" y2="446" stroke="#2d323b" stroke-width="2"/>
           <!-- floor marks + numbers -->
           <g font-family="Arimo, sans-serif" font-size="12" fill="#9aa0a9">
-            <line x1="40" y1="140" x2="150" y2="140" stroke="#262b33" stroke-width="1.5"/>
-            <line x1="40" y1="268" x2="150" y2="268" stroke="#262b33" stroke-width="1.5"/>
-            <line x1="40" y1="396" x2="150" y2="396" stroke="#262b33" stroke-width="1.5"/>
-            <text x="164" y="80">FL 3</text>
-            <text x="164" y="208">FL 2</text>
-            <text x="164" y="336">FL 1</text>
+            <line x1="40" y1="230" x2="150" y2="230" stroke="#262b33" stroke-width="1.5"/>
+            <text x="164" y="126">FL 2</text>
+            <text x="164" y="344">FL 1</text>
           </g>
           <!-- machine sheave -->
           <circle cx="95" cy="26" r="10" fill="none" stroke="#6b7280" stroke-width="2.5"/>
