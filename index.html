@@ -1245,6 +1245,19 @@
   let lastY = window.scrollY;
 
   let audioCtx;
+  // real recorded elevator audio (doors + ride rumble); synth versions remain as fallback
+  const sfxData = {};
+  ['door-close', 'door-open', 'ride'].forEach(n => {
+    sfxData[n] = fetch('assets/sfx-' + n + '.m4a').then(r => r.arrayBuffer()).catch(() => null);
+  });
+  const sfxBuf = {};
+  function sfx(name) {
+    if (sfxBuf[name] || !audioCtx) return Promise.resolve(sfxBuf[name] || null);
+    return sfxData[name]
+      .then(ab => ab ? audioCtx.decodeAudioData(ab.slice(0)) : null)
+      .then(b => (sfxBuf[name] = b))
+      .catch(() => null);
+  }
   function pressSound() {
     try {
       audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
@@ -1298,6 +1311,18 @@
   function doorSound(closing) {
     try {
       const c = audioCtx; if (!c) return;
+      sfx(closing ? 'door-close' : 'door-open').then(buf => {
+        if (!buf) return doorSynth(closing);
+        const src = c.createBufferSource(); src.buffer = buf;
+        const g = c.createGain(); g.gain.value = 0.9;
+        src.connect(g).connect(c.destination);
+        src.start();
+      });
+    } catch (e) {}
+  }
+  function doorSynth(closing) {
+    try {
+      const c = audioCtx; if (!c) return;
       const t = c.currentTime + 0.01;
       const dur = 2.7;
       const len = Math.floor(c.sampleRate * dur);
@@ -1323,6 +1348,30 @@
     } catch (e) {}
   }
   function humSound(dur, ramp) {
+    try {
+      const c = audioCtx; if (!c) return;
+      sfx('ride').then(buf => {
+        if (!buf) return humSynth(dur, ramp);
+        const t = c.currentTime + 0.01;
+        const src = c.createBufferSource(); src.buffer = buf;
+        src.loop = true;
+        src.loopStart = 0.2; src.loopEnd = buf.duration - 0.3;
+        // rumble swells and pitch rises with car speed, eases off while braking
+        src.playbackRate.setValueAtTime(0.82, t);
+        src.playbackRate.linearRampToValueAtTime(1, t + ramp);
+        src.playbackRate.setValueAtTime(1, t + Math.max(ramp, dur - ramp));
+        src.playbackRate.linearRampToValueAtTime(0.82, t + dur);
+        const g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(1, t + ramp);
+        g.gain.setValueAtTime(1, t + Math.max(ramp, dur - ramp));
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        src.connect(g).connect(c.destination);
+        src.start(t); src.stop(t + dur + 0.1);
+      });
+    } catch (e) {}
+  }
+  function humSynth(dur, ramp) {
     try {
       const c = audioCtx; if (!c) return;
       const t = c.currentTime + 0.01;
