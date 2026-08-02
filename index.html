@@ -108,13 +108,19 @@
   .brand svg { width: 26px; height: 26px; flex: none; }
   .indicator {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 0;
     background: #0a0b0d;
     border: 1px solid var(--line);
     border-radius: 4px;
-    padding: 6px 14px;
+    padding: 4px 16px 5px;
     box-shadow: inset 0 2px 8px rgba(0,0,0,0.7);
+  }
+  .indicator .ind-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .indicator .arrow {
     font-family: var(--font-mono);
@@ -799,9 +805,11 @@
 <header class="site">
   <a class="brand" href="#top"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="#151a24" stroke="#5b8cff" stroke-width="5"/><path d="M32 17 L45 35 L19 35 Z" fill="#5b8cff"/><rect x="21" y="41" width="22" height="6" rx="3" fill="#97a1b4"/></svg>elevatorzboy20<em>.</em></a>
   <div class="indicator" title="Current floor">
-    <button class="arrow" id="arrow-up" type="button" aria-label="Go up one floor">&#9650;</button>
-    <span class="floor-num" id="floor-num">1</span>
-    <button class="arrow" id="arrow-down" type="button" aria-label="Go down one floor">&#9660;</button>
+    <div class="ind-row">
+      <button class="arrow" id="arrow-up" type="button" aria-label="Go up one floor">&#9650;</button>
+      <span class="floor-num" id="floor-num">1</span>
+      <button class="arrow" id="arrow-down" type="button" aria-label="Go down one floor">&#9660;</button>
+    </div>
     <span class="label" id="floor-label">Lobby</span>
   </div>
 </header>
