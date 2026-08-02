@@ -87,6 +87,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 28px;
+    min-height: 96px;
     border-bottom: 1px solid var(--line);
     background: var(--panel);
     position: sticky;
@@ -107,6 +108,11 @@
   .brand em { font-style: normal; color: var(--amber); }
   .brand svg { width: 26px; height: 26px; flex: none; }
   .indicator {
+    /* centered on the button panel's column: 22px inset + half its 108px width */
+    position: absolute;
+    top: 50%;
+    right: 76px;
+    transform: translate(50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -503,6 +509,7 @@
   }
   .ride-doors .door.left { left: 0; border-right: 1px solid #0a0b0d; transform: translateX(-101%); }
   .ride-doors .door.right { right: 0; border-left: 1px solid #0a0b0d; transform: translateX(101%); }
+  .ride-doors.closed { pointer-events: auto; }
   .ride-doors.closed .door { transform: translateX(0); }
   .ride-indicator {
     position: absolute;
@@ -764,8 +771,8 @@
     .stats { grid-template-columns: repeat(2, 1fr); }
     .stat:nth-child(2) { border-right: none; }
     .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--line); }
-    header.site { padding: 12px 16px; }
-    .indicator { padding: 4px 10px; gap: 8px; }
+    header.site { padding: 12px 16px; min-height: 0; }
+    .indicator { position: static; transform: none; padding: 4px 10px; gap: 8px; }
     .indicator .floor-num { font-size: 18px; }
     .indicator .label { display: none; }
     main { padding: 0 18px; }
@@ -1315,13 +1322,16 @@
       }
     } catch (e) {}
   }
-  function humSound(up, dur) {
+  function humSound(dur, ramp) {
     try {
       const c = audioCtx; if (!c) return;
       const t = c.currentTime + 0.01;
       const o = c.createOscillator(); o.type = 'triangle';
-      o.frequency.setValueAtTime(up ? 80 : 115, t);
-      o.frequency.linearRampToValueAtTime(up ? 115 : 80, t + dur);
+      // motor pitch tracks car speed: spin up, cruise, spin down
+      o.frequency.setValueAtTime(80, t);
+      o.frequency.linearRampToValueAtTime(115, t + ramp);
+      o.frequency.setValueAtTime(115, t + Math.max(ramp, dur - ramp));
+      o.frequency.linearRampToValueAtTime(80, t + dur);
       const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 260;
       const g = c.createGain();
       g.gain.setValueAtTime(0.0001, t);
@@ -1387,7 +1397,7 @@
 
   function rideTo(floor) {
     const id = floorTargets[floor];
-    if (!id || riding) return;
+    if (!id || riding || doorsClosed) return;
     if (floor === currentFloor) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.getElementById(id).scrollIntoView({ behavior: 'auto' });
@@ -1408,28 +1418,38 @@
       const el = document.getElementById(id);
       const top = el.getBoundingClientRect().top + window.scrollY - 62;
       window.scrollTo({ top: top, behavior: 'instant' });
-      const stepMs = 1333;
-      humSound(up, (steps * stepMs + 500) / 1000);
-      let f = from;
-      const timer = setInterval(() => {
-        f += up ? 1 : -1;
-        rideNum.textContent = f;
-        floorNum.textContent = f;
-        tickSound();
-        if (f === floor) {
-          clearInterval(timer);
-          setTimeout(() => {
-            dingSound();
-            currentFloor = floor;
-            floorLabel.textContent = document.getElementById(id).dataset.label;
-            navLinks.forEach(a => a.classList.toggle('active', parseInt(a.dataset.floor, 10) === floor));
-            rideArrowUp.classList.remove('lit');
-            rideArrowDown.classList.remove('lit');
-            setDoors(false);
-            setTimeout(() => { riding = false; }, 2750);
-          }, 450);
-        }
-      }, stepMs);
+      // trapezoidal speed profile: accelerate at 2 floors/s² up to 2 floors/s,
+      // cruise, brake. 1 floor: 1.41s, 2 floors: 2s, +0.5s each after; 10 floors: 6s.
+      const ACCEL = 2, VMAX = 2;
+      const peak = Math.min(VMAX, Math.sqrt(steps * ACCEL));
+      const rampT = peak / ACCEL;
+      const rampD = peak * peak / (2 * ACCEL);
+      const total = (steps - 2 * rampD) / peak + 2 * rampT;
+      humSound(total + 0.45, rampT);
+      for (let s = 1; s <= steps; s++) {
+        const f = from + (up ? s : -s);
+        let t;
+        if (s <= rampD) t = Math.sqrt(2 * s / ACCEL);
+        else if (s >= steps - rampD) t = total - Math.sqrt(2 * (steps - s) / ACCEL);
+        else t = rampT + (s - rampD) / peak;
+        setTimeout(() => {
+          rideNum.textContent = f;
+          floorNum.textContent = f;
+          tickSound();
+          if (f === floor) {
+            setTimeout(() => {
+              dingSound();
+              currentFloor = floor;
+              floorLabel.textContent = document.getElementById(id).dataset.label;
+              navLinks.forEach(a => a.classList.toggle('active', parseInt(a.dataset.floor, 10) === floor));
+              rideArrowUp.classList.remove('lit');
+              rideArrowDown.classList.remove('lit');
+              setDoors(false);
+              setTimeout(() => { riding = false; }, 2750);
+            }, 450);
+          }
+        }, Math.round(t * 1000));
+      }
     }, 2850);
   }
 
