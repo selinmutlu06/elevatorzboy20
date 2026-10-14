@@ -7,7 +7,7 @@
 <meta name="description" content="Emir, American elevator enthusiast. Home of the Hoppovator, Honda facts, and the 2026 Lexus GX550 Overtrail+.">
 <meta name="theme-color" content="#10141c">
 <meta property="og:title" content="elevatorzboy20.">
-<meta property="og:description" content="Emir, American elevator enthusiast. Ride the site: 15 floors of elevators, Honda, and the garage.">
+<meta property="og:description" content="Emir, American elevator enthusiast. Ride the site: 11 floors of elevators, Honda, and the garage.">
 <meta property="og:url" content="https://elevatorzboy.org">
 <meta property="og:image" content="https://elevatorzboy.org/assets/banner.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -172,16 +172,6 @@
     flex-direction: column;
     gap: 10px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 var(--steel-hi);
-  }
-  @media (min-width: 901px) {
-    nav.panel {
-      display: grid;
-      grid-template-columns: repeat(2, 38px);
-      direction: rtl;
-      column-gap: 12px;
-    }
-    nav.panel > * { direction: ltr; }
-    nav.panel .door-row { grid-column: 1 / -1; }
   }
   nav.panel a {
     position: relative;
@@ -789,19 +779,6 @@
     .plate { padding: 20px 16px 16px; }
     .cert { padding: 22px 16px; }
     footer.site { padding-bottom: 130px; }
-    /* 15 floors: two rows, low floors + door buttons on the bottom */
-    nav.panel {
-      display: grid;
-      grid-template-columns: repeat(9, 30px);
-      direction: rtl;
-      gap: 6px 5px;
-      padding: 10px 12px;
-      border-radius: 24px;
-      max-width: none;
-    }
-    nav.panel > * { direction: ltr; }
-    nav.panel .btn { width: 30px; height: 30px; font-size: 11px; }
-    nav.panel .door-row { grid-column: span 2; order: 0; border-left: none; padding: 0; margin: 0; gap: 5px; }
   }
 </style>
 </head>
@@ -843,11 +820,7 @@
 </header>
 
 <nav class="panel" aria-label="Floors">
-  <a href="#south-elevator" data-floor="15"><span class="name">South Elevator.</span><span class="btn">15</span></a>
-  <a href="#north-elevator" data-floor="14"><span class="name">North Elevator.</span><span class="btn">14</span></a>
-  <a href="#melville" data-floor="13"><span class="name">Melville.</span><span class="btn">13</span></a>
-  <a href="#dormitator" data-floor="12"><span class="name">Dormitator.</span><span class="btn">12</span></a>
-  <a href="#warritator" data-floor="11"><span class="name">Warritator.</span><span class="btn">11</span></a>
+  <a href="#warritator" data-floor="11"><span class="name">Warritator &amp; Dormitator.</span><span class="btn">11</span></a>
   <a href="#servicator" data-floor="10"><span class="name">Servicator.</span><span class="btn">10</span></a>
   <a href="#merciator" data-floor="9"><span class="name">Merciator.</span><span class="btn">9</span></a>
   <a href="#suggestions" data-floor="8"><span class="name">Suggestions?</span><span class="btn">8</span></a>
@@ -1227,7 +1200,7 @@
 
   <!-- FLOOR 11 : WARRITATOR -->
   <section class="floor" data-floor="11" data-label="Warritator" id="warritator">
-    <div class="floor-plaque"><span class="sq">11</span><span class="lbl">152 Liberty Corner Road</span></div>
+    <div class="floor-plaque"><span class="sq">11</span><span class="lbl">Warren, NJ and Durham, NC</span></div>
     <h2>The Warritator.</h2>
     <p><b>Warren, NJ.</b> Beautiful. Kone EcoDisc MRL Traction Elevator at 152 Liberty Corner Road. This is the Warritator.</p>
     <div class="plate" style="margin-top: 26px; max-width: 560px;">
@@ -1241,12 +1214,7 @@
       <div class="spec-row"><span class="k">Capacity</span><span class="v">2500 lbs</span></div>
       <div class="spec-row"><span class="k">Verdict</span><span class="v">Beautiful</span></div>
     </div>
-  </section>
-
-  <!-- FLOOR 12 : DORMITATOR -->
-  <section class="floor" data-floor="12" data-label="Dormitator" id="dormitator">
-    <div class="floor-plaque"><span class="sq">12</span><span class="lbl">Few Quad</span></div>
-    <h2>The Dormitator.</h2>
+    <h2 style="margin-top: 48px;">The Dormitator.</h2>
     <p><b>Durham, NC.</b> Amazing. Otis 411M Traction Elevator, formerly an Otis 21UCL, at Few Quad. This is the Dormitator. It was installed November 6, 1970 and modernized in 2008.</p>
     <div class="plate" style="margin-top: 26px; max-width: 560px;">
       <span class="rivet-b"></span>
@@ -1262,56 +1230,6 @@
       <div class="spec-row"><span class="k">Speed</span><span class="v">2 speed, 125 fpm</span></div>
       <div class="spec-row"><span class="k">Verdict</span><span class="v">Amazing</span></div>
     </div>
-  </section>
-
-  <!-- FLOOR 13 : MELVILLE MAIN -->
-  <section class="floor" data-floor="13" data-label="Melville" id="melville">
-    <div class="floor-plaque"><span class="sq">13</span><span class="lbl">105 Maxess Road</span></div>
-    <h2>Melville, NY.</h2>
-    <p><b>Main Elevators:</b> OTIS 211 Series 1 Hydraulic Elevators, 105 Maxess Road. This has a Schindler office to it, I got a button and some other stuff I got. These hydraulic elevators don't have a rear door.</p>
-  </section>
-
-  <!-- FLOOR 14 : NORTH ELEVATOR -->
-  <section class="floor" data-floor="14" data-label="North" id="north-elevator">
-    <div class="floor-plaque"><span class="sq">14</span><span class="lbl">105 Maxess Road</span></div>
-    <h2>North Elevator.</h2>
-    <p>OTIS LVM Series 1 North Hydraulic Elevator, 105 Maxess Road. This hydraulic elevator model was different, it was LVM but the main hydraulic elevators were 211.</p>
-    <div class="plate" style="margin-top: 26px; max-width: 560px;">
-      <span class="rivet-b"></span>
-      <h3>North Hydraulic Elevator</h3>
-      <div class="plate-sub">OTIS LVM Series 1, 105 Maxess Road</div>
-      <div class="spec-row"><span class="k">Installed</span><span class="v">2001</span></div>
-      <div class="spec-row"><span class="k">Type</span><span class="v">Submersible Holed Hydraulic</span></div>
-      <div class="spec-row"><span class="k">Capacity</span><span class="v">2500 lbs / 1135 kgs / 1150 kgs</span></div>
-      <div class="spec-row"><span class="k">Front door, interior</span><span class="v">Left Single Slide</span></div>
-      <div class="spec-row"><span class="k">Front door, exterior</span><span class="v">Right Single Slide</span></div>
-      <div class="spec-row"><span class="k">Rear door, interior</span><span class="v">Right Single Slide</span></div>
-      <div class="spec-row"><span class="k">Rear door, exterior</span><span class="v">Left Single Slide</span></div>
-      <div class="spec-row"><span class="k">Fixtures</span><span class="v">Newer OTIS LVM</span></div>
-      <div class="spec-row"><span class="k">Building type</span><span class="v">Melville Corporate Center</span></div>
-    </div>
-  </section>
-
-  <!-- FLOOR 15 : SOUTH ELEVATOR -->
-  <section class="floor" data-floor="15" data-label="South" id="south-elevator">
-    <div class="floor-plaque"><span class="sq">15</span><span class="lbl">105 Maxess Road</span></div>
-    <h2>South Elevator.</h2>
-    <p>OTIS LVM Series 1 South Hydraulic Elevator, 105 Maxess Road. This hydraulic elevator model also was different to the north one, it was LVM but the main hydraulic elevators were 211.</p>
-    <div class="plate" style="margin-top: 26px; max-width: 560px;">
-      <span class="rivet-b"></span>
-      <h3>South Hydraulic Elevator</h3>
-      <div class="plate-sub">OTIS LVM Series 1, 105 Maxess Road</div>
-      <div class="spec-row"><span class="k">Installed</span><span class="v">2001</span></div>
-      <div class="spec-row"><span class="k">Type</span><span class="v">Submersible Holed Hydraulic</span></div>
-      <div class="spec-row"><span class="k">Capacity</span><span class="v">2500 lbs / 1135 kgs / 1150 kgs</span></div>
-      <div class="spec-row"><span class="k">Front door, interior</span><span class="v">Right Single Slide</span></div>
-      <div class="spec-row"><span class="k">Front door, exterior</span><span class="v">Left Single Slide</span></div>
-      <div class="spec-row"><span class="k">Rear door, interior</span><span class="v">Left Single Slide</span></div>
-      <div class="spec-row"><span class="k">Rear door, exterior</span><span class="v">Right Single Slide</span></div>
-      <div class="spec-row"><span class="k">Fixtures</span><span class="v">Newer OTIS LVM</span></div>
-      <div class="spec-row"><span class="k">Building type</span><span class="v">Melville Corporate Center</span></div>
-    </div>
-    <p class="note">These hydraulic elevators on this building have only <b>2500 lbs / 1135 kgs / 1150 kgs</b>.</p>
   </section>
 
   <div class="banner-strip">
@@ -1500,7 +1418,7 @@
     } catch (e) {}
   }
 
-  const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules', 6: 'recent-elevator', 7: 'next-stops', 8: 'suggestions', 9: 'merciator', 10: 'servicator', 11: 'warritator', 12: 'dormitator', 13: 'melville', 14: 'north-elevator', 15: 'south-elevator'};
+  const floorTargets = {1: 'lobby', 2: 'hoppovator', 3: 'honda', 4: 'lexus-cybertruck', 5: 'news-rules', 6: 'recent-elevator', 7: 'next-stops', 8: 'suggestions', 9: 'merciator', 10: 'servicator', 11: 'warritator'};
   const rideDoors = document.getElementById('ride-doors');
   const rideNum = document.getElementById('ride-num');
   const rideArrowUp = document.getElementById('ride-arrow-up');
